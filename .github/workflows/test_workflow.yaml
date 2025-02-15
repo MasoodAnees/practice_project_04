@@ -1,0 +1,58 @@
+name: Test Workflow
+on: [ push ]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup Environment
+      uses: actions/setup-node@v4
+      with:
+        node_version: 22
+    - name: Install dependencies
+      run: npm ci
+    - name: Lint step
+      run: npm run lint
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup Environment
+      uses: actions/setup-node@v4
+      with:
+        node_version: 22
+    - name: Install dependencies
+      run: npm ci
+    - name: Test step
+      run: npm run test
+  build:
+    needs: [ lint, test ]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup Environment
+      uses: actions/setup-node@v4
+      with:
+        node_version: 22
+    - name: Install dependencies
+      run: npm ci
+    - name: Build step
+      run: npm run build"
+  deploy:
+    needs: [ lint, test, build ]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup Environment
+      uses: actions/setup-node@v4
+      with:
+        node_version: 22
+    - name: Install dependencies
+      run: npm ci
+    - name: Deploy step
+      run: echo "Deploying..."
